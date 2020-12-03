@@ -16,7 +16,7 @@ In order to use ST_Visions in your project, download all necessary modules in yo
 pip install −r requirements.txt
 
 # Using conda
-conda install −r requirements.txt
+conda install --file requirements.txt
 ```
 
 

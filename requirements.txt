@@ -1,0 +1,7 @@
+Shapely==1.7.0
+tqdm==4.43.0
+bokeh==2.0.0
+pandas==1.0.3
+geopandas==0.7.0
+numpy==1.18.1
+PyYAML==5.3.1
