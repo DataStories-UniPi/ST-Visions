@@ -171,8 +171,9 @@ def create_linestring_from_points(gdf, column_handlers, **kwargs):
 	"""
 
 	tqdm.pandas(**kwargs)
-
-	linestrings = gdf.groupby(column_handlers, group_keys=False).progress_apply(lambda l: shapely.geometry.LineString(l.geometry.values) if len(l) >= 2 else shapely.geometry.LineString(np.repeat(l.geometry.values, 2))).to_frame().reset_index()
+	
+	name = gdf.geometry.name
+	linestrings = gdf.groupby(column_handlers, group_keys=False).progress_apply(lambda l: shapely.geometry.LineString(l[name].values) if len(l) >= 2 else shapely.geometry.LineString(np.repeat(l[name].values, 2))).to_frame().reset_index()
 	linestrings.rename({0: 'geom'}, inplace=True, axis=1)
 	linestrings = gpd.GeoDataFrame(linestrings, crs=gdf.crs, geometry='geom')
 

@@ -40,7 +40,7 @@ def plot_points_on_map(obj, tools=None, map_provider='CARTODBPOSITRON', glyph_ty
         **kwargs: dict
             Other parameters related to the Canvas creation
     '''
-    basic_tools = "pan,box_zoom,wheel_zoom,previewsave,reset" 
+    basic_tools = "pan,box_zoom,wheel_zoom,save,reset" 
     extra_tools = f'{basic_tools},{",".join(tools)}' if tools is not None else basic_tools
         
     obj.create_canvas(title=f'Prototype Plot', sizing_mode=sizing_mode, plot_height=540, tools=extra_tools, **kwargs)
@@ -82,7 +82,7 @@ def plot_polygons_on_map(obj, tools=None, map_provider='CARTODBPOSITRON', polygo
         **kwargs: dict
             Other parameters related to the Canvas creation
     '''
-    basic_tools = "pan,box_zoom,wheel_zoom,previewsave,reset" 
+    basic_tools = "pan,box_zoom,wheel_zoom,save,reset" 
     extra_tools = f'{basic_tools},{",".join(tools)}' if tools is not None else basic_tools
         
     obj.create_canvas(title=f'Prototype Plot', sizing_mode=sizing_mode, plot_height=540, tools=extra_tools, **kwargs)
@@ -122,7 +122,7 @@ def plot_lines_on_map(obj, tools=None, map_provider='CARTODBPOSITRON', line_type
         **kwargs: dict
             Other parameters related to the Canvas creation
     '''
-    basic_tools = "pan,box_zoom,wheel_zoom,previewsave,reset" 
+    basic_tools = "pan,box_zoom,wheel_zoom,save,reset" 
     extra_tools = f'{basic_tools},{",".join(tools)}' if tools is not None else basic_tools
         
     obj.create_canvas(title=f'Prototype Plot', sizing_mode=sizing_mode, plot_height=540, tools=extra_tools, **kwargs)
