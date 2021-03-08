@@ -94,4 +94,4 @@ Andreas Tritsarolis, Christos Doulkeridis, Yannis Theodoridis and Nikos Pelekis;
 
 ## Acknowledgement
 ---
-Research funded by the 2018 National Funds Programme of the General Secretariat of Research and Technology (GSRT), Greece.
+This  project  has  received  funding  from  the  Hellenic Foundation for Research and Innovation (HFRI) and the General Secretariat for Research and Technology (GSRT), under grant agreement No 1667, from 2018 National Funds Programme of the GSRT, and from EU/H2020 project VesselAI (grant agreement No 957237).
