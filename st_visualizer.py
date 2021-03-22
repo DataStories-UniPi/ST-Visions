@@ -26,6 +26,7 @@ from bokeh.layouts import column, widgetbox, row
 # Importing Helper Libraries
 import geom_helper
 import callbacks
+import pymongo
 
 
 # Defining Allowed Values (per use-case)
@@ -131,7 +132,36 @@ class st_visualizer:
             The communication 'bridge' that will send data from the loaded dataset to the Canvas.
         """
         self.source = source
-
+       
+    def get_data_mongodb(self, uri, database, collection, query={}, aggregation=[], sp_columns=['lon', 'lat'], crs='epsg:4326'):
+        """
+        Get data from a MongoDB and load them as a GeoDataFrame.
+        
+        Parameters
+        ----------
+        uri: str
+            The connection URI for the MongoDB server.
+        database: str
+            The database containing the data.
+        collection: str
+            The collection containing the data.
+        query: dict
+            The query to be performed on the collection.
+        aggregation: list of dicts
+            The aggregation to be performed on the collection.
+        sp_columns: List (default: ```['lon', 'lat']```)
+            The (ordered) list of columns that contain the spatial coordinates
+        crs: str (default: ```'epsg:4326'```)  
+            The CRS of the Dataset's spatial coordinates
+        """
+        with pymongo.MongoClient(uri) as myclient: 
+            col = myclient[database][collection]
+            if len(aggregation) > 0:
+                data = pd.DataFrame(list(col.aggregate(aggregation)))
+            else:
+                data = pd.DataFrame(list(col.find(aggregation)))
+            data = geom_helper.getGeoDataFrame_v2(data, coordinate_columns=sp_columns, crs=crs)
+            self.__set_data(data, sp_columns)
 
     def get_data_csv(self, filepath, sp_columns=['lon', 'lat'], crs='epsg:4326', **kwargs):
         """
@@ -523,7 +553,7 @@ class st_visualizer:
         self.figure.add_tools(bokeh_mdl.LassoSelectTool(**kwargs))
 
 
-    def add_temporal_filter(self, temporal_name='ts', temporal_unit='s', step_ms=3600000, title='Temporal Horizon', height_policy='min', callback_policy='value_throttled', callback_class=None, **kwargs):
+    def add_temporal_filter(self, datetime_format=None, temporal_name='ts', temporal_unit='s', step_ms=3600000, title='Temporal Horizon', height_policy='min', callback_policy='value_throttled', callback_class=None, **kwargs):
         """
         Add a Temporal Filter to the Canvas
         
@@ -551,9 +581,17 @@ class st_visualizer:
         kwargs.pop('value', None) 
 
         step = step_ms
-
-        start_date = pd.to_datetime(self.data[temporal_name].min(), unit=temporal_unit)
-        end_date   = pd.to_datetime(self.data[temporal_name].max(), unit=temporal_unit)
+        
+        if datetime_format is None:
+            start_date = pd.to_datetime(self.data[temporal_name].min(), unit=temporal_unit)
+        else:
+            start_date = pd.to_datetime(self.data[temporal_name].min(), format=datetime_format)
+        
+        if datetime_format is None:
+            end_date   = pd.to_datetime(self.data[temporal_name].max(), unit=temporal_unit)
+        else:
+            end_date   = pd.to_datetime(self.data[temporal_name].max(), format=datetime_format)
+        
 
         temp_filter = bokeh_mdl.DateRangeSlider(start=start_date, end=end_date, value=(start_date, end_date), step=step, title=title, height_policy=height_policy, **kwargs)
         temp_filter.format = '%d %b %Y %H:%M:%S.%3N'
@@ -574,8 +612,11 @@ class st_visualizer:
                     # self.widget.title = (f'{title}: {new_start}...{new_end}')
 
                     new_pts = self.get_data()
-                    new_pts = new_pts.loc[pd.to_datetime(new_pts[temporal_name], unit=temporal_unit).between(new_start, new_end)]
-
+                    if datetime_format is None:
+                        new_pts = new_pts.loc[pd.to_datetime(new_pts[temporal_name], unit=temporal_unit).between(new_start, new_end)]
+                    else:
+                        new_pts = new_pts.loc[pd.to_datetime(new_pts[temporal_name], format=datetime_format).between(new_start, new_end)]
+                    
                     self.callback_prepare_data(new_pts, self.widget.id==self.vsn_instance.aquire_canvas_data)
             callback_class = Callback
         
