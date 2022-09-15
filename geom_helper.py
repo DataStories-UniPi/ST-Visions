@@ -180,7 +180,7 @@ def create_linestring_from_points(gdf, column_handlers, **kwargs):
 	return linestrings
 
 
-def getGeoDataFrame_v2(df, coordinate_columns=['lon', 'lat'], crs={'init':'epsg:4326'}):
+def getGeoDataFrame_v2(df, coordinate_columns=['lon', 'lat'], crs='epsg:4326'):
 	'''
 		Create a GeoDataFrame from a DataFrame in a much more generalized form.
 	'''
