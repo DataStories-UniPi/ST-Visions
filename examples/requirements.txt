@@ -1,0 +1,4 @@
+pandas==2.3.3
+kafka-python==2.2.15
+loguru==0.7.3
+python-dotenv==1.2.1

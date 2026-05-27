@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "st_visions"
+version = "1.1"
+description = "A Python-based library for interactive spatio-temporal data visualization."
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "Shapely>=2.1.2",
+    "tqdm>=4.67.1",
+    "bokeh>=3.8.0",
+    "pandas>=2.3.3",
+    "geopandas>=1.1.1",
+    "numpy>=2.2.6",
+    "PyYAML>=6.0.3",
+    "pyarrow>=21.0.0",
+    "kafka-python>=2.2.15",
+    "loguru>=0.7.3",
+    "python-dotenv>=1.2.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
